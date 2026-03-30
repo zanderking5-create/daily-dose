@@ -87,6 +87,9 @@ Return ONLY valid JSON in this exact format, no markdown, no code blocks:
       }
     }
 
+    // Strip web search citation tags before parsing
+    rawContent = rawContent.replace(/<cite[^>]*>|<\/cite>/g, '')
+
     // Parse JSON from response
     const jsonMatch = rawContent.match(/\{[\s\S]*\}/)
     if (!jsonMatch) {
