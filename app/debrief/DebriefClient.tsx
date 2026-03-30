@@ -13,8 +13,15 @@ interface Props {
   prevSupplements: string[]
 }
 
+const SLIDER_LABELS: Record<string, string[]> = {
+  mood:      ['Terrible', 'Bad', 'Low', 'Meh', 'Okay', 'Fine', 'Good', 'Great', 'Excellent', 'Amazing'],
+  energy:    ['Drained', 'Exhausted', 'Low', 'Sluggish', 'Okay', 'Decent', 'Good', 'Energized', 'Pumped', 'On Fire'],
+  stress:    ['Zen', 'Relaxed', 'Calm', 'Easy', 'Mild', 'Moderate', 'Tense', 'Stressed', 'Overwhelmed', 'Maxed Out'],
+  gassiness: ['None', 'Barely', 'Slight', 'Noticeable', 'Moderate', 'Active', 'Frequent', 'Lots', 'Very Gassy', 'Legendary'],
+}
+
 function SliderField({
-  label, value, onChange, min = 1, max = 10, lowLabel, highLabel, color = '#C4956A'
+  label, value, onChange, min = 1, max = 10, lowLabel, highLabel, color = '#C4956A', labelKey
 }: {
   label: string
   value: number
@@ -24,15 +31,24 @@ function SliderField({
   lowLabel?: string
   highLabel?: string
   color?: string
+  labelKey?: string
 }) {
-  const pct = ((value - min) / (max - min)) * 100
+  const descriptor = labelKey && SLIDER_LABELS[labelKey] ? SLIDER_LABELS[labelKey][value - 1] : null
   return (
     <div className="mb-5">
       <div className="flex justify-between items-center mb-2">
         <label className="text-sm font-semibold" style={{ color: '#2D2A26' }}>{label}</label>
-        <span className="text-lg font-semibold" style={{ fontFamily: 'var(--font-fraunces)', color }}>
-          {value}
-        </span>
+        <div className="flex items-center gap-2">
+          {descriptor && (
+            <span className="text-xs font-medium px-2 py-0.5 rounded-full"
+              style={{ backgroundColor: '#FAF8F5', color: '#8B857D', border: '1px solid #E8E4DF' }}>
+              {descriptor}
+            </span>
+          )}
+          <span className="text-lg font-semibold" style={{ fontFamily: 'var(--font-fraunces)', color }}>
+            {value}
+          </span>
+        </div>
       </div>
       <div className="relative">
         <input
@@ -298,13 +314,13 @@ export default function DebriefClient({ existing, today, prevMedications, prevSu
           {/* Wellbeing */}
           <SectionCard title="How are you feeling?">
             <SliderField label="Mood" value={mood} onChange={setMood}
-              lowLabel="Low" highLabel="Great" color="#7C8B6F" />
+              color="#7C8B6F" labelKey="mood" />
             <SliderField label="Energy" value={energy} onChange={setEnergy}
-              lowLabel="Drained" highLabel="Energized" color="#C4956A" />
+              color="#C4956A" labelKey="energy" />
             <SliderField label="Stress" value={stress} onChange={setStress}
-              lowLabel="Calm" highLabel="Overwhelmed" color="#A0856D" />
+              color="#A0856D" labelKey="stress" />
             <SliderField label="Gassiness" value={gassiness} onChange={setGassiness}
-              lowLabel="None" highLabel="Maximum" color="#8B857D" />
+              color="#8B857D" labelKey="gassiness" />
           </SectionCard>
 
           {/* Gut check */}
