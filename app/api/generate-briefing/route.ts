@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
   }
 
   const db = useServiceRole ? createServiceClient() : await createClient()
-  const today = new Date().toISOString().split('T')[0]
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' })
 
   const { data: existing } = await db
     .from('briefings')

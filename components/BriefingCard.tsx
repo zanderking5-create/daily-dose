@@ -12,30 +12,29 @@ interface SectionProps {
   title: string
   children: React.ReactNode
   accent?: string
-  tint?: string
   last?: boolean
 }
 
-function Section({ title, children, accent, tint, last }: SectionProps) {
+function Section({ title, children, accent, last }: SectionProps) {
   return (
-    <div
-      className="py-4"
-      style={{
-        borderBottom: last ? 'none' : '1px solid #E8E4DF',
-        borderLeft: accent ? `3px solid ${accent}` : undefined,
-        paddingLeft: accent ? '14px' : undefined,
-        borderRadius: accent ? '0 8px 8px 0' : undefined,
-        backgroundColor: tint,
-        margin: tint ? '0 -20px' : undefined,
-        padding: tint ? '16px 20px' : undefined,
-      }}
-    >
-      <h3
-        className="text-xs font-semibold uppercase tracking-widest mb-3"
-        style={{ color: '#8B857D', fontFamily: 'var(--font-jakarta)' }}
-      >
-        {title}
-      </h3>
+    <div className="py-4" style={{ borderBottom: last ? 'none' : '1px solid #E8E4DF' }}>
+      <div className="flex items-center gap-2 mb-3">
+        {accent && (
+          <div style={{
+            width: '3px',
+            height: '13px',
+            borderRadius: '2px',
+            backgroundColor: accent,
+            flexShrink: 0,
+          }} />
+        )}
+        <h3
+          className="text-xs font-semibold uppercase tracking-widest"
+          style={{ color: '#8B857D', fontFamily: 'var(--font-jakarta)' }}
+        >
+          {title}
+        </h3>
+      </div>
       {children}
     </div>
   )
@@ -65,11 +64,11 @@ export default function BriefingCard({ content, date, generatedAt }: Props) {
       <div className="px-5">
         {/* Markets — sage green accent */}
         <Section title="Markets" accent="#7C8B6F">
-          <p className="text-sm leading-relaxed mb-2" style={{ color: '#2D2A26' }}>{content.markets.summary}</p>
-          <ul className="space-y-1">
+          <p className="text-base leading-relaxed mb-2.5" style={{ color: '#2D2A26' }}>{content.markets.summary}</p>
+          <ul className="space-y-1.5">
             {content.markets.bullets.map((b, i) => (
-              <li key={i} className="text-sm flex gap-2" style={{ color: '#5B6B4F' }}>
-                <span style={{ color: '#7C8B6F', fontWeight: 600 }}>↑</span>
+              <li key={i} className="text-sm flex gap-2.5" style={{ color: '#4A5E3F' }}>
+                <span style={{ color: '#7C8B6F', fontWeight: 700, flexShrink: 0 }}>↑</span>
                 <span>{b}</span>
               </li>
             ))}
@@ -78,35 +77,35 @@ export default function BriefingCard({ content, date, generatedAt }: Props) {
 
         {/* Tech & AI — warm amber accent */}
         <Section title="Tech & AI" accent="#B8956A">
-          <p className="text-sm leading-relaxed mb-2" style={{ color: '#2D2A26' }}>{content.tech_ai.summary}</p>
-          <ul className="space-y-1">
+          <p className="text-base leading-relaxed mb-2.5" style={{ color: '#2D2A26' }}>{content.tech_ai.summary}</p>
+          <ul className="space-y-1.5">
             {content.tech_ai.bullets.map((b, i) => (
-              <li key={i} className="text-sm flex gap-2" style={{ color: '#5B6B4F' }}>
-                <span style={{ color: '#B8956A', fontWeight: 600 }}>›</span>
+              <li key={i} className="text-sm flex gap-2.5" style={{ color: '#4A5E3F' }}>
+                <span style={{ color: '#B8956A', fontWeight: 700, flexShrink: 0 }}>›</span>
                 <span>{b}</span>
               </li>
             ))}
           </ul>
         </Section>
 
-        {/* News — headline gets terracotta treatment */}
+        {/* News — terracotta inset block */}
         <Section title="News">
-          <div className="rounded-lg px-4 py-3 mb-0" style={{ backgroundColor: '#FAF8F5', borderLeft: '3px solid #C4956A' }}>
-            <p className="text-sm font-semibold mb-1.5" style={{ color: '#2D2A26' }}>{content.news.headline}</p>
+          <div className="rounded-lg px-4 py-3" style={{ backgroundColor: '#FAF8F5', borderLeft: '3px solid #C4956A' }}>
+            <p className="text-base font-semibold mb-1.5" style={{ color: '#2D2A26' }}>{content.news.headline}</p>
             <p className="text-sm leading-relaxed" style={{ color: '#5B6B4F' }}>{content.news.summary}</p>
           </div>
         </Section>
 
-        {/* Fun Fact + Joke — tinted inset pair */}
+        {/* Fun Fact + Joke — side-by-side tinted cards */}
         <div className="py-4" style={{ borderBottom: '1px solid #E8E4DF' }}>
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-xl p-3.5" style={{ backgroundColor: '#F0F2EE' }}>
               <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#7C8B6F' }}>✦ Fact</p>
-              <p className="text-xs leading-relaxed" style={{ color: '#2D2A26' }}>{content.fun_fact}</p>
+              <p className="text-sm leading-relaxed" style={{ color: '#2D2A26' }}>{content.fun_fact}</p>
             </div>
             <div className="rounded-xl p-3.5" style={{ backgroundColor: '#FAF0E8' }}>
               <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#B8956A' }}>ha Joke</p>
-              <p className="text-xs leading-relaxed" style={{ color: '#2D2A26' }}>{content.joke}</p>
+              <p className="text-sm leading-relaxed" style={{ color: '#2D2A26' }}>{content.joke}</p>
             </div>
           </div>
         </div>
@@ -151,7 +150,7 @@ export default function BriefingCard({ content, date, generatedAt }: Props) {
               {content.reach_out.person[0]}
             </div>
             <div>
-              <p className="text-sm font-semibold mb-0.5" style={{ color: '#2D2A26' }}>{content.reach_out.person}</p>
+              <p className="text-base font-semibold mb-0.5" style={{ color: '#2D2A26' }}>{content.reach_out.person}</p>
               <p className="text-sm" style={{ color: '#5B6B4F' }}>{content.reach_out.reason}</p>
             </div>
           </div>

@@ -77,7 +77,7 @@ export default function HistoryClient({ briefingDates, debriefDates }: Props) {
     }, 100)
   }
 
-  const todayStr = today.toISOString().split('T')[0]
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 
   return (
     <div style={{ backgroundColor: '#FAF8F5', minHeight: '100vh' }}>
