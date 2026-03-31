@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import Anthropic from '@anthropic-ai/sdk'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { REACH_OUT_PEOPLE } from '@/lib/types'
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!)
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 // Curated stoic quotes — diverse authors, avoiding the overused ones
 const STOIC_QUOTES = [
@@ -189,13 +189,14 @@ Return ONLY valid JSON, no markdown, no code blocks:
 }`
 
   try {
-    // Gemini Flash — free tier, 1500 req/day
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
-    const result = await model.generateContent(prompt)
-    let rawContent = result.response.text()
+    const message = await anthropic.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: prompt }],
+    })
 
-    // Strip markdown fences Gemini sometimes adds
-    rawContent = rawContent.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim()
+    const rawText = message.content[0].type === 'text' ? message.content[0].text : ''
+    const rawContent = rawText.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim()
 
     const jsonMatch = rawContent.match(/\{[\s\S]*\}/)
     if (!jsonMatch) throw new Error('No valid JSON found in response')
