@@ -8,11 +8,34 @@ interface Props {
   generatedAt: string
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+interface SectionProps {
+  title: string
+  children: React.ReactNode
+  accent?: string
+  tint?: string
+  last?: boolean
+}
+
+function Section({ title, children, accent, tint, last }: SectionProps) {
   return (
-    <div className="py-4" style={{ borderBottom: '1px solid #E8E4DF' }}>
-      <h3 className="text-xs font-semibold uppercase tracking-widest mb-3"
-        style={{ color: '#8B857D', fontFamily: 'var(--font-jakarta)' }}>{title}</h3>
+    <div
+      className="py-4"
+      style={{
+        borderBottom: last ? 'none' : '1px solid #E8E4DF',
+        borderLeft: accent ? `3px solid ${accent}` : undefined,
+        paddingLeft: accent ? '14px' : undefined,
+        borderRadius: accent ? '0 8px 8px 0' : undefined,
+        backgroundColor: tint,
+        margin: tint ? '0 -20px' : undefined,
+        padding: tint ? '16px 20px' : undefined,
+      }}
+    >
+      <h3
+        className="text-xs font-semibold uppercase tracking-widest mb-3"
+        style={{ color: '#8B857D', fontFamily: 'var(--font-jakarta)' }}
+      >
+        {title}
+      </h3>
       {children}
     </div>
   )
@@ -24,87 +47,113 @@ export default function BriefingCard({ content, date, generatedAt }: Props) {
   })
 
   return (
-    <div className="card p-5 animate-fade-in" style={{
+    <div className="card animate-fade-in" style={{
       background: '#FFFFFF',
       borderRadius: '16px',
       boxShadow: '0 1px 3px rgba(45,42,38,0.06), 0 4px 12px rgba(45,42,38,0.04)',
-      border: '1px solid #E8E4DF'
+      border: '1px solid #E8E4DF',
+      overflow: 'hidden',
     }}>
-      <div className="flex items-center justify-between mb-4">
+      {/* Header */}
+      <div className="flex items-center justify-between px-5 pt-5 pb-4" style={{ borderBottom: '1px solid #E8E4DF' }}>
         <h2 className="text-xl" style={{ fontFamily: 'var(--font-fraunces)', color: '#2D2A26' }}>
           Morning Briefing
         </h2>
         <span className="text-xs" style={{ color: '#8B857D' }}>Generated {genTime}</span>
       </div>
 
-      {/* Markets */}
-      <Section title="Markets">
-        <p className="text-sm leading-relaxed mb-2" style={{ color: '#2D2A26' }}>{content.markets.summary}</p>
-        <ul className="space-y-1">
-          {content.markets.bullets.map((b, i) => (
-            <li key={i} className="text-sm flex gap-2" style={{ color: '#5B6B4F' }}>
-              <span style={{ color: '#C4956A' }}>•</span>
-              <span>{b}</span>
-            </li>
-          ))}
-        </ul>
-      </Section>
+      <div className="px-5">
+        {/* Markets — sage green accent */}
+        <Section title="Markets" accent="#7C8B6F">
+          <p className="text-sm leading-relaxed mb-2" style={{ color: '#2D2A26' }}>{content.markets.summary}</p>
+          <ul className="space-y-1">
+            {content.markets.bullets.map((b, i) => (
+              <li key={i} className="text-sm flex gap-2" style={{ color: '#5B6B4F' }}>
+                <span style={{ color: '#7C8B6F', fontWeight: 600 }}>↑</span>
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+        </Section>
 
-      {/* Tech & AI */}
-      <Section title="Tech & AI">
-        <p className="text-sm leading-relaxed mb-2" style={{ color: '#2D2A26' }}>{content.tech_ai.summary}</p>
-        <ul className="space-y-1">
-          {content.tech_ai.bullets.map((b, i) => (
-            <li key={i} className="text-sm flex gap-2" style={{ color: '#5B6B4F' }}>
-              <span style={{ color: '#C4956A' }}>•</span>
-              <span>{b}</span>
-            </li>
-          ))}
-        </ul>
-      </Section>
+        {/* Tech & AI — warm amber accent */}
+        <Section title="Tech & AI" accent="#B8956A">
+          <p className="text-sm leading-relaxed mb-2" style={{ color: '#2D2A26' }}>{content.tech_ai.summary}</p>
+          <ul className="space-y-1">
+            {content.tech_ai.bullets.map((b, i) => (
+              <li key={i} className="text-sm flex gap-2" style={{ color: '#5B6B4F' }}>
+                <span style={{ color: '#B8956A', fontWeight: 600 }}>›</span>
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+        </Section>
 
-      {/* News */}
-      <Section title="News">
-        <p className="text-sm font-semibold mb-1" style={{ color: '#2D2A26' }}>{content.news.headline}</p>
-        <p className="text-sm leading-relaxed" style={{ color: '#5B6B4F' }}>{content.news.summary}</p>
-      </Section>
-
-      {/* Two columns: Fun Fact + Joke */}
-      <div className="grid grid-cols-1 gap-3 py-4" style={{ borderBottom: '1px solid #E8E4DF' }}>
-        <div className="rounded-xl p-4" style={{ backgroundColor: '#FAF8F5' }}>
-          <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#8B857D' }}>Fun Fact</p>
-          <p className="text-sm leading-relaxed" style={{ color: '#2D2A26' }}>{content.fun_fact}</p>
-        </div>
-        <div className="rounded-xl p-4" style={{ backgroundColor: '#FAF8F5' }}>
-          <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#8B857D' }}>Today's Joke</p>
-          <p className="text-sm leading-relaxed" style={{ color: '#2D2A26' }}>{content.joke}</p>
-        </div>
-      </div>
-
-      {/* Stoic Quote */}
-      <div className="py-4" style={{ borderBottom: '1px solid #E8E4DF' }}>
-        <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#8B857D' }}>Stoic Thought</p>
-        <blockquote className="text-base italic leading-relaxed mb-2"
-          style={{ fontFamily: 'var(--font-fraunces)', color: '#2D2A26' }}>
-          "{content.stoic.quote}"
-        </blockquote>
-        <p className="text-xs font-semibold mb-2" style={{ color: '#7C8B6F' }}>— {content.stoic.author}</p>
-        <p className="text-sm leading-relaxed" style={{ color: '#5B6B4F' }}>{content.stoic.tie_in}</p>
-      </div>
-
-      {/* Reach Out */}
-      <div className="pt-4">
-        <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#8B857D' }}>Reach Out Today</p>
-        <div className="flex items-start gap-3 rounded-xl p-4" style={{ backgroundColor: '#F0DCC8' }}>
-          <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-            style={{ backgroundColor: '#C4956A' }}>
-            <span className="text-white text-sm font-semibold">
-              {content.reach_out.person[0]}
-            </span>
+        {/* News — headline gets terracotta treatment */}
+        <Section title="News">
+          <div className="rounded-lg px-4 py-3 mb-0" style={{ backgroundColor: '#FAF8F5', borderLeft: '3px solid #C4956A' }}>
+            <p className="text-sm font-semibold mb-1.5" style={{ color: '#2D2A26' }}>{content.news.headline}</p>
+            <p className="text-sm leading-relaxed" style={{ color: '#5B6B4F' }}>{content.news.summary}</p>
           </div>
-          <div>
-            <p className="text-sm font-semibold" style={{ color: '#2D2A26' }}>{content.reach_out.person}</p>
-            <p className="text-sm" style={{ color: '#5B6B4F' }}>{content.reach_out.reason}</p>
+        </Section>
+
+        {/* Fun Fact + Joke — tinted inset pair */}
+        <div className="py-4" style={{ borderBottom: '1px solid #E8E4DF' }}>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-xl p-3.5" style={{ backgroundColor: '#F0F2EE' }}>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#7C8B6F' }}>✦ Fact</p>
+              <p className="text-xs leading-relaxed" style={{ color: '#2D2A26' }}>{content.fun_fact}</p>
+            </div>
+            <div className="rounded-xl p-3.5" style={{ backgroundColor: '#FAF0E8' }}>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#B8956A' }}>ha Joke</p>
+              <p className="text-xs leading-relaxed" style={{ color: '#2D2A26' }}>{content.joke}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Stoic Quote — decorative treatment */}
+        <div className="py-5" style={{ borderBottom: '1px solid #E8E4DF', position: 'relative' }}>
+          <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#8B857D' }}>Stoic Thought</p>
+          <div style={{ position: 'relative', paddingLeft: '20px' }}>
+            <span style={{
+              position: 'absolute',
+              left: '-6px',
+              top: '-22px',
+              fontFamily: 'var(--font-fraunces)',
+              fontSize: '88px',
+              lineHeight: 1,
+              color: '#7C8B6F',
+              opacity: 0.18,
+              userSelect: 'none',
+              pointerEvents: 'none',
+            }}>&ldquo;</span>
+            <blockquote
+              className="text-base italic leading-relaxed mb-3"
+              style={{ fontFamily: 'var(--font-fraunces)', color: '#2D2A26' }}
+            >
+              {content.stoic.quote}
+            </blockquote>
+            <p className="text-xs font-semibold mb-2.5" style={{ color: '#7C8B6F', letterSpacing: '0.04em' }}>
+              — {content.stoic.author}
+            </p>
+            <p className="text-sm leading-relaxed" style={{ color: '#5B6B4F' }}>{content.stoic.tie_in}</p>
+          </div>
+        </div>
+
+        {/* Reach Out */}
+        <div className="py-4">
+          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#8B857D' }}>Reach Out Today</p>
+          <div className="flex items-start gap-3 rounded-xl p-4" style={{ backgroundColor: '#F5EAD8', border: '1px solid rgba(196,149,106,0.2)' }}>
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-white text-sm font-semibold"
+              style={{ backgroundColor: '#C4956A', fontFamily: 'var(--font-fraunces)' }}
+            >
+              {content.reach_out.person[0]}
+            </div>
+            <div>
+              <p className="text-sm font-semibold mb-0.5" style={{ color: '#2D2A26' }}>{content.reach_out.person}</p>
+              <p className="text-sm" style={{ color: '#5B6B4F' }}>{content.reach_out.reason}</p>
+            </div>
           </div>
         </div>
       </div>
