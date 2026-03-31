@@ -42,6 +42,8 @@ export interface Debrief {
   energy: number | null
   stress: number | null
   gassiness: number | null
+  work_score: number | null
+  social_score: number | null
   bristol_stool: number | null
   exercise_type: string | null
   exercise_duration: number | null

@@ -24,6 +24,8 @@ function DebriefSummary({ debrief }: { debrief: Debrief }) {
     { label: 'Mood', value: debrief.mood, color: '#7C8B6F' },
     { label: 'Energy', value: debrief.energy, color: '#C4956A' },
     { label: 'Stress', value: debrief.stress, color: '#A0856D' },
+    { label: 'Work', value: debrief.work_score, color: '#5B6B4F' },
+    { label: 'Social', value: debrief.social_score, color: '#7C8B6F' },
   ].filter(m => m.value !== null)
 
   return (

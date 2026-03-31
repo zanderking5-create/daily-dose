@@ -14,10 +14,12 @@ interface Props {
 }
 
 const SLIDER_LABELS: Record<string, string[]> = {
-  mood:      ['Terrible', 'Bad', 'Low', 'Meh', 'Okay', 'Fine', 'Good', 'Great', 'Excellent', 'Amazing'],
-  energy:    ['Drained', 'Exhausted', 'Low', 'Sluggish', 'Okay', 'Decent', 'Good', 'Energized', 'Pumped', 'On Fire'],
-  stress:    ['Zen', 'Relaxed', 'Calm', 'Easy', 'Mild', 'Moderate', 'Tense', 'Stressed', 'Overwhelmed', 'Maxed Out'],
-  gassiness: ['None', 'Barely', 'Slight', 'Noticeable', 'Moderate', 'Active', 'Frequent', 'Lots', 'Very Gassy', 'Legendary'],
+  mood:         ['Terrible', 'Bad', 'Low', 'Meh', 'Okay', 'Fine', 'Good', 'Great', 'Excellent', 'Amazing'],
+  energy:       ['Drained', 'Exhausted', 'Low', 'Sluggish', 'Okay', 'Decent', 'Good', 'Energized', 'Pumped', 'On Fire'],
+  stress:       ['Zen', 'Relaxed', 'Calm', 'Easy', 'Mild', 'Moderate', 'Tense', 'Stressed', 'Overwhelmed', 'Maxed Out'],
+  gassiness:    ['None', 'Barely', 'Slight', 'Noticeable', 'Moderate', 'Active', 'Frequent', 'Lots', 'Very Gassy', 'Legendary'],
+  work_score:   ['Awful', 'Rough', 'Hard', 'Tough', 'Okay', 'Decent', 'Good', 'Solid', 'Great', 'Best Day'],
+  social_score: ['Isolated', 'Quiet', 'Low-key', 'Minimal', 'Okay', 'Connected', 'Social', 'Engaged', 'Vibrant', 'On Fire'],
 }
 
 function SliderField({
@@ -225,6 +227,8 @@ export default function DebriefClient({ existing, today, prevMedications, prevSu
   const [energy, setEnergy] = useState(existing?.energy ?? 7)
   const [stress, setStress] = useState(existing?.stress ?? 4)
   const [gassiness, setGassiness] = useState(existing?.gassiness ?? 3)
+  const [workScore, setWorkScore] = useState(existing?.work_score ?? 7)
+  const [socialScore, setSocialScore] = useState(existing?.social_score ?? 7)
   const [bristol, setBristol] = useState<number | null>(existing?.bristol_stool ?? null)
   const [exerciseType, setExerciseType] = useState(existing?.exercise_type ?? 'none')
   const [exerciseDuration, setExerciseDuration] = useState(existing?.exercise_duration ?? 0)
@@ -259,6 +263,8 @@ export default function DebriefClient({ existing, today, prevMedications, prevSu
     const payload = {
       date: today,
       mood, energy, stress, gassiness,
+      work_score: workScore,
+      social_score: socialScore,
       bristol_stool: bristol,
       exercise_type: exerciseType,
       exercise_duration: exerciseType === 'none' ? null : exerciseDuration,
@@ -321,6 +327,14 @@ export default function DebriefClient({ existing, today, prevMedications, prevSu
               color="#A0856D" labelKey="stress" />
             <SliderField label="Gassiness" value={gassiness} onChange={setGassiness}
               color="#8B857D" labelKey="gassiness" />
+          </SectionCard>
+
+          {/* Work & Social */}
+          <SectionCard title="Work & Social">
+            <SliderField label="Work Day" value={workScore} onChange={setWorkScore}
+              color="#5B6B4F" labelKey="work_score" />
+            <SliderField label="Social" value={socialScore} onChange={setSocialScore}
+              color="#7C8B6F" labelKey="social_score" />
           </SectionCard>
 
           {/* Gut check */}

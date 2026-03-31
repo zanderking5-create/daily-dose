@@ -8,7 +8,7 @@ export default async function DebriefPage() {
 
   if (!user) redirect('/login')
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' })
 
   const { data: existing } = await supabase
     .from('debriefs')
