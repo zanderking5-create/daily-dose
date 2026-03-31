@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
 import { createClient } from '@/lib/supabase/client'
@@ -38,6 +38,7 @@ export default function HistoryClient({ briefingDates, debriefDates }: Props) {
   const [briefing, setBriefing] = useState<Briefing | null>(null)
   const [debrief, setDebrief] = useState<Debrief | null>(null)
   const [loading, setLoading] = useState(false)
+  const detailRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
 
   const bSet = new Set(briefingDates)
@@ -69,6 +70,11 @@ export default function HistoryClient({ briefingDates, debriefDates }: Props) {
     setBriefing(bRes.data)
     setDebrief(dRes.data)
     setLoading(false)
+
+    // Scroll to detail on mobile
+    setTimeout(() => {
+      detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 100)
   }
 
   const todayStr = today.toISOString().split('T')[0]
@@ -175,7 +181,7 @@ export default function HistoryClient({ briefingDates, debriefDates }: Props) {
 
         {/* Day detail */}
         {selectedDate && (
-          <div className="animate-fade-in">
+          <div ref={detailRef} className="animate-fade-in">
             <h2 className="text-lg mb-4" style={{ fontFamily: 'var(--font-fraunces)', color: '#2D2A26' }}>
               {new Date(selectedDate + 'T12:00:00').toLocaleDateString('en-US', {
                 weekday: 'long', month: 'long', day: 'numeric'

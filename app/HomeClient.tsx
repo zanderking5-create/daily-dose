@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import BriefingCard from '@/components/BriefingCard'
@@ -67,9 +68,19 @@ function DebriefSummary({ debrief }: { debrief: Debrief }) {
 }
 
 export default function HomeClient({ initialBriefing, initialDebrief, today }: Props) {
+  const router = useRouter()
   const [briefing, setBriefing] = useState(initialBriefing)
   const [generating, setGenerating] = useState(false)
   const [genError, setGenError] = useState('')
+
+  // Auto-refresh at midnight so the page resets to the new day
+  useEffect(() => {
+    const now = new Date()
+    const msUntilMidnight =
+      new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() - now.getTime()
+    const timer = setTimeout(() => router.refresh(), msUntilMidnight + 1000)
+    return () => clearTimeout(timer)
+  }, [])
 
   async function handleGenerateBriefing() {
     setGenerating(true)
