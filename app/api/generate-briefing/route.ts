@@ -167,6 +167,7 @@ STOIC QUOTE (pre-selected):
 "${stoicQuote.quote}" — ${stoicQuote.author}
 
 REACH OUT PERSON TODAY: ${reachOutPerson}
+IMPORTANT: ${reachOutPerson} is a personal friend of Zander's, NOT a startup founder or professional contact. Do NOT invent career details, companies, or professional context. Instead write a warm, specific reason to reach out based on friendship — like catching up, sharing something they'd enjoy, a memory, or just checking in with personality.
 
 Your job:
 1. Use the market data to write a 1-2 sentence markets summary + 2-3 specific bullet points
@@ -190,8 +191,8 @@ Return ONLY valid JSON, no markdown, no code blocks:
 
   try {
     const message = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1024,
+      model: 'claude-sonnet-4-5',
+      max_tokens: 1500,
       messages: [{ role: 'user', content: prompt }],
     })
 
