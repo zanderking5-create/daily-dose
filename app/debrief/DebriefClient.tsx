@@ -242,6 +242,17 @@ export default function DebriefClient({ existing, today, prevMedications, prevSu
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
+  const [confirmReset, setConfirmReset] = useState(false)
+
+  function handleStartFresh() {
+    if (!confirmReset) { setConfirmReset(true); return }
+    setMood(7); setEnergy(7); setStress(4); setGassiness(3)
+    setWorkScore(7); setSocialScore(7); setBristol(null)
+    setExerciseType('none'); setExerciseDuration(0); setWater(0)
+    setMedications([]); setSupplements([])
+    setGratitude(''); setIntentions(''); setNotes(''); setShowNotes(false)
+    setConfirmReset(false)
+  }
 
   const allMedOptions = Array.from(new Set([...prevMedications]))
   const allSuppOptions = Array.from(new Set([...DEFAULT_SUPPLEMENTS, ...prevSupplements]))
@@ -310,9 +321,24 @@ export default function DebriefClient({ existing, today, prevMedications, prevSu
           <p className="text-sm mb-1" style={{ color: '#8B857D' }}>
             {new Date(today + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
           </p>
-          <h1 className="text-3xl" style={{ fontFamily: 'var(--font-fraunces)', color: '#2D2A26' }}>
-            {existing ? 'Edit your debrief' : 'Evening debrief'}
-          </h1>
+          <div className="flex items-end justify-between">
+            <h1 className="text-3xl" style={{ fontFamily: 'var(--font-fraunces)', color: '#2D2A26' }}>
+              {existing ? 'Edit your debrief' : 'Evening debrief'}
+            </h1>
+            {existing && (
+              <button
+                type="button"
+                onClick={handleStartFresh}
+                className="text-xs font-medium px-3 py-1.5 rounded-lg mb-1 transition-colors"
+                style={{
+                  backgroundColor: confirmReset ? '#FEF0E8' : '#FAF8F5',
+                  color: confirmReset ? '#C4956A' : '#8B857D',
+                  border: `1px solid ${confirmReset ? '#C4956A' : '#E8E4DF'}`,
+                }}>
+                {confirmReset ? 'Tap again to confirm' : 'Start fresh'}
+              </button>
+            )}
+          </div>
         </div>
 
         <form onSubmit={handleSave} className="space-y-4">
